@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #lesson-table, #quiz-form, #answer-key, #round-two-form, #round-two-key { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Interactive OSI Quiz</h1>
+
+  <!-- Button to show the lesson -->
+  <button type="button" id="show-lesson">Show Lesson</button>
+
+  <!-- Lesson Table (Initially Hidden) -->
+  <table id="lesson-table" border="1" style="margin-top: 20px;">
+    <tr><th>Layer</th><th>Layer Name</th><th>Description</th></tr>
+    <tr><td>Layer 7</td><td>Application</td><td>Access protocols used by applications to communicate data to end users</td></tr>
+    <tr><td>Layer 6</td><td>Presentation</td><td>Configures data into an acceptable format via translation, encryption, and compression</td></tr>
+    <tr><td>Layer 5</td><td>Session</td><td>Manages connections. The opening & closing of sessions between devices</td></tr>
+    <tr><td>Layer 4</td><td>Transport</td><td>Segment. Handles data transmission between devices using UDP & TCP protocols</td></tr>
+    <tr><td>Layer 3</td><td>Network</td><td>Packets. Conducts routing between different networks, determining the most efficient path</td></tr>
+    <tr><td>Layer 2</td><td>Data Link</td><td>Frames. Handles node-to-node data transfer between devices on the same network</td></tr>
+    <tr><td>Layer 1</td><td>Physical</td><td>Bits. Converts data into bits to carry it across physical network equipment</td></tr>
+  </table>
+
+  <!-- Button to start the quiz (Initially Hidden) -->
+  <button type="button" id="start-quiz" style="display:none; margin-top: 20px;">Start Quiz</button>
+
+  <!-- Quiz Form (Initially Hidden) -->
+  <form id="quiz-form">
+    <h3>Answer the following questions (Round One):</h3>
+    <div>
+      <label>1. What layer is associated with Access protocols used by applications to communicate data to end users?</label>
+      <input type="text" id="q1">
+    </div>
+    <div>
+      <label>2. What layer is associated with Configures data into an acceptable format via translation, encryption, and compression?</label>
+      <input type="text" id="q2">
+    </div>
+    <div>
+      <label>3. What layer is associated with Manages connections. The opening & closing of sessions between devices?</label>
+      <input type="text" id="q3">
+    </div>
+    <div>
+      <label>4. What layer is associated with Segment. Handles data transmission between devices using UDP & TCP protocols?</label>
+      <input type="text" id="q4">
+    </div>
+    <div>
+      <label>5. What layer is associated with Packets. Conducts routing between different networks, determining the most efficient path?</label>
+      <input type="text" id="q5">
+    </div>
+    <div>
+      <label>6. What layer is associated with Frames. Handles node-to-node data transfer between devices on the same network?</label>
+      <input type="text" id="q6">
+    </div>
+    <div>
+      <label>7. What layer is associated with Bits. Converts data into bits to carry it across physical network equipment?</label>
+      <input type="text" id="q7">
+    </div>
+    <button type="button" id="submit-quiz">Submit Quiz</button>
+  </form>
+
+  <h2 id="results"></h2>
+
+  <!-- Answer Key (Initially Hidden) -->
+  <h3 id="answer-key" style="display:none;">Answer Key (Round One):</h3>
+  <ul id="quiz-answers">
+    <!-- Answer key will be filled dynamically -->
+  </ul>
+
+  <!-- Button to start Round Two (Initially Hidden) -->
+  <button type="button" id="start-round-two" style="display:none;">Start Round Two</button>
+
+  <!-- Quiz Form (Round Two - Initially Hidden) -->
+  <form id="round-two-form">
+    <h3>Answer the following questions (Round Two):</h3>
+    <div>
+      <label>1. What layer is associated with Bits. Converts data into bits to carry it across physical network equipment?</label>
+      <input type="text" id="r2_q7">
+    </div>
+    <div>
+      <label>2. What layer is associated with Access protocols used by applications to communicate data to end users?</label>
+      <input type="text" id="r2_q1">
+    </div>
+    <div>
+      <label>3. What layer is associated with Segment. Handles data transmission between devices using UDP & TCP protocols?</label>
+      <input type="text" id="r2_q4">
+    </div>
+    <div>
+      <label>4. What layer is associated with Frames. Handles node-to-node data transfer between devices on the same network?</label>
+      <input type="text" id="r2_q6">
+    </div>
+    <div>
+      <label>5. What layer is associated with Configures data into an acceptable format via translation, encryption, and compression?</label>
+      <input type="text" id="r2_q2">
+    </div>
+    <div>
+      <label>6. What layer is associated with Manages connections. The opening & closing of sessions between devices?</label>
+      <input type="text" id="r2_q3">
+    </div>
+    <div>
+      <label>7. What layer is associated with Packets. Conducts routing between different networks, determining the most efficient path?</label>
+      <input type="text" id="r2_q5">
+    </div>
+    <button type="button" id="submit-round-two">Submit Round Two</button>
+  </form>
+
+  <h2 id="results-round-two"></h2>
+
+  <!-- Answer Key for Round Two (Initially Hidden) -->
+  <h3 id="round-two-key" style="display:none;">Answer Key (Round Two):</h3>
+  <ul id="quiz-answers-two">
+    <!-- Answer key will be filled dynamically -->
+  </ul>
+
+  <script>
+    // Lesson and quiz data
+    const answersRoundOne = {
+      q1: "application",
+      q2: "presentation",
+      q3: "session",
+      q4: "transport",
+      q5: "network",
+      q6: "data link",
+      q7: "physical"
+    };
+
+    const answersRoundTwo = {
+      r2_q1: "application",
+      r2_q2: "presentation",
+      r2_q3: "session",
+      r2_q4: "transport",
+      r2_q5: "network",
+      r2_q6: "data link",
+      r2_q7: "physical"
+    };
+
+    // Function to validate answers for Round 1
+    function validateAnswersRoundOne() {
+      const resultList = document.getElementById('quiz-answers');
+      const quizForm = document.getElementById('quiz-form');
+      const inputs = quizForm.querySelectorAll('input');
+      
+      resultList.innerHTML = "";  // Clear previous results
+
+      inputs.forEach(input => {
+        const key = input.id;
+        const userAnswer = input.value.trim().toLowerCase();
+        if (userAnswer === answersRoundOne[key]) {
+          resultList.innerHTML += `<li>Correct! ${key.toUpperCase()} is ${answersRoundOne[key].charAt(0).toUpperCase() + answersRoundOne[key].slice(1)}.</li>`;
+        } else {
+          resultList.innerHTML += `<li>Incorrect! ${key.toUpperCase()} should be ${answersRoundOne[key].charAt(0).toUpperCase() + answersRoundOne[key].slice(1)}.</li>`;
+        }
+      });
+    }
+
+    // Function to validate answers for Round 2
+    function validateAnswersRoundTwo() {
+      const resultList = document.getElementById('quiz-answers-two');
+      const quizForm = document.getElementById('round-two-form');
+      const inputs = quizForm.querySelectorAll('input');
+      
+      resultList.innerHTML = "";  // Clear previous results
+
+      inputs.forEach(input => {
+        const key = input.id;
+        const userAnswer = input.value.trim().toLowerCase();
+        if (userAnswer === answersRoundTwo[key]) {
+          resultList.innerHTML += `<li>Correct! ${key.toUpperCase()} is ${answersRoundTwo[key].charAt(0).toUpperCase() + answersRoundTwo[key].slice(1)}.</li>`;
+        } else {
+          resultList.innerHTML += `<li>Incorrect! ${key.toUpperCase()} should be ${answersRoundTwo[key].charAt(0).toUpperCase() + answersRoundTwo[key].slice(1)}.</li>`;
+        }
+      });
+    }
+
+    // Event listener to show the lesson table
+    document.getElementById('show-lesson').addEventListener('click', function() {
+      document.getElementById('lesson-table').style.display = 'block';
+      document.getElementById('start-quiz').style.display = 'block';
+      document.getElementById('show-lesson').style.display = 'none';  // Hide the 'Show Lesson' button
+    });
+
+    // Event listener to start the quiz
+    document.getElementById('start-quiz').addEventListener('click', function() {
+      document.getElementById('lesson-table').style.display = 'none';  // Hide lesson table when quiz starts
+      document.getElementById('quiz-form').style.display = 'block';
+      document.getElementById('start-quiz').style.display = 'none';  // Hide 'Start Quiz' button
+    });
+
+    // Event listener to submit the quiz and show answers
+    document.getElementById('submit-quiz').addEventListener('click', function() {
+      validateAnswersRoundOne();
+      document.getElementById('quiz-form').style.display = 'none';  // Hide quiz form after submission
+      document.getElementById('answer-key').style.display = 'block';  // Show answer key after submission
+      document.getElementById('start-round-two').style.display = 'block';  // Show the Round Two button
+    });
+
+    // Event listener to start Round Two
+    document.getElementById('start-round-two').addEventListener('click', function() {
+      document.getElementById('round-two-form').style.display = 'block';
+      document.getElementById('start-round-two').style.display = 'none';  // Hide 'Start Round Two' button
+    });
+
+    // Event listener to submit the quiz for Round Two
+    document.getElementById('submit-round-two').addEventListener('click', function() {
+      validateAnswersRoundTwo();
+      document.getElementById('round-two-form').style.display = 'none';  // Hide quiz form after submission
+      document.getElementById('round-two-key').style.display = 'block';  // Show answer key for Round Two
+    });
+  </script>
+</body>
+</html>
